@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffb3d1;
+            transition: background-color 1s;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .card {
+            padding: 2rem;
+            background-color: #ff85b2;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .dark-background {
+            background-color: #2a0a1a !important;
+        }
+
+        .rose {
+            position: absolute;
+            font-size: 2vw;
+            opacity: 0;
+            animation: fadeIn 2s forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ffb3d1;
+            font-size: 3vw;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 2s;
+            pointer-events: none;
+            font-family: 'Arial', sans-serif;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .show-message {
+            opacity: 1 !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">Click me for a surprise! 🌹</div>
+    <div class="message">Happy Rose Day<br>I love you Bishakha, meri jaan</div>
+
+    <script>
+        const card = document.querySelector('.card');
+        const body = document.querySelector('body');
+        const message = document.querySelector('.message');
+
+        card.addEventListener('click', () => {
+            body.classList.add('dark-background');
+            card.style.display = 'none';
+
+            // Create roses
+            for (let i = 0; i < 50; i++) {
+                const rose = document.createElement('div');
+                rose.classList.add('rose');
+                rose.innerHTML = '🌹';
+                rose.style.left = Math.random() * 100 + '%';
+                rose.style.top = Math.random() * 100 + '%';
+                rose.style.animationDelay = i * 0.1 + 's';
+                document.body.appendChild(rose);
+            }
+
+            // Show message after roses appear
+            setTimeout(() => {
+                message.classList.add('show-message');
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
