@@ -5,92 +5,191 @@
         body {
             margin: 0;
             height: 100vh;
+            overflow: hidden;
+            transition: background 1s;
+            font-family: 'Arial', sans-serif;
+            background: white;
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #ffb3d1;
-            transition: background-color 1s;
-            cursor: pointer;
-            overflow: hidden;
         }
 
-        .card {
-            padding: 2rem;
-            background-color: #ff85b2;
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            text-align: center;
-            transition: transform 0.3s;
-        }
-
-        .card:hover {
-            transform: scale(1.05);
-        }
-
-        .dark-background {
-            background-color: #2a0a1a !important;
-        }
-
-        .rose {
+        .circle {
             position: absolute;
-            font-size: 2vw;
-            opacity: 0;
-            animation: fadeIn 2s forwards;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        .message {
-            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: #D81B60;
+            border-radius: 50%;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            color: #ffb3d1;
-            font-size: 3vw;
-            text-align: center;
-            opacity: 0;
-            transition: opacity 2s;
-            pointer-events: none;
-            font-family: 'Arial', sans-serif;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 1s, opacity 0.5s;
+            z-index: 2;
         }
 
-        .show-message {
-            opacity: 1 !important;
+        .circle-text {
+            color: white;
+            font-size: 24px;
+            transition: all 1s;
+            pointer-events: none;
+        }
+
+        .valentine-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: #D81B60;
+            opacity: 0;
+            transition: opacity 1s;
+        }
+
+        .valentine-question {
+            color: white;
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .options {
+            display: flex;
+            gap: 20px;
+        }
+
+        button {
+            padding: 10px 30px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s;
+        }
+
+        #yesBtn {
+            background: #ffffff;
+            color: #D81B60;
+        }
+
+        #noBtn {
+            background: #4A148C;
+            color: white;
+            position: relative;
+        }
+
+        .flower {
+            position: absolute;
+            font-size: 24px;
+            opacity: 1;
+            animation: float 4s infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-100vh); opacity: 0; }
+        }
+
+        #pleading {
+            display: none;
+            color: white;
+            margin-top: 20px;
+            font-size: 18px;
         }
     </style>
 </head>
 <body>
-    <div class="card">Click me for a surprise! 🌹</div>
-    <div class="message">Happy Rose Day<br>I love you Bishakha, meri jaan</div>
+    <div class="circle">
+        <div class="circle-text">Bishakha</div>
+    </div>
+
+    <div class="valentine-screen">
+        <div class="valentine-question">
+            Would you be my Valentine?
+        </div>
+        <div class="options">
+            <button id="yesBtn">Yes</button>
+            <button id="noBtn">No</button>
+        </div>
+        <div id="pleading">Please!!!!!! Please!!!!! Please!!!!!!</div>
+    </div>
+
+    <audio id="backgroundMusic" loop style="display: none;">
+        <source src="your-song.mp3" type="audio/mpeg">
+    </audio>
 
     <script>
-        const card = document.querySelector('.card');
-        const body = document.querySelector('body');
-        const message = document.querySelector('.message');
+        const circle = document.querySelector('.circle');
+        const circleText = document.querySelector('.circle-text');
+        const valentineScreen = document.querySelector('.valentine-screen');
+        const noBtn = document.getElementById('noBtn');
+        const pleading = document.getElementById('pleading');
+        const music = document.getElementById('backgroundMusic');
+        const yesBtn = document.getElementById('yesBtn');
 
-        card.addEventListener('click', () => {
-            body.classList.add('dark-background');
-            card.style.display = 'none';
+        let hasExpanded = false;
 
-            // Create roses
-            for (let i = 0; i < 1000; i++) {
-                const rose = document.createElement('div');
-                rose.classList.add('rose');
-                rose.innerHTML = '🌹';
-                rose.style.left = Math.random() * 100 + '%';
-                rose.style.top = Math.random() * 100 + '%';
-                rose.style.animationDelay = i * 0.1 + 's';
-                document.body.appendChild(rose);
-            }
+        // Circle expands, disappears, and shows the Valentine screen
+        circle.addEventListener('click', () => {
+            if (hasExpanded) return;
 
-            // Show message after roses appear
+            hasExpanded = true;
+            circle.style.transform = 'scale(100)';
+            circle.style.opacity = '0';
+            circleText.style.opacity = '0';
+            document.body.style.transition = 'background 1s';
+            document.body.style.background = '#D81B60';
+
             setTimeout(() => {
-                message.classList.add('show-message');
-            }, 3000);
+                circle.remove(); // Completely removes the circle
+                valentineScreen.style.display = 'flex';
+                setTimeout(() => {
+                    valentineScreen.style.opacity = '1';
+                }, 100);
+            }, 1000);
+
+            music.play();
+        });
+
+        // "No" button moves randomly when hovered
+        noBtn.addEventListener('mouseover', () => {
+            const maxX = window.innerWidth - 200;
+            const maxY = window.innerHeight - 200;
+
+            const randomX = Math.random() * maxX;
+            const randomY = Math.random() * maxY;
+
+            noBtn.style.position = 'absolute';
+            noBtn.style.left = `${randomX}px`;
+            noBtn.style.top = `${randomY}px`;
+            pleading.style.display = 'block';
+        });
+
+        // "Yes" button shows final message and flowers
+        yesBtn.addEventListener('click', () => {
+            valentineScreen.innerHTML = `
+                <div style="color:white; font-size: 28px; text-align:center;">
+                    💖 Yay meri jaan!!!! 💖<br>I love you more!<br>Thank you! 🌹
+                </div>
+            `;
+
+            // Show floating flowers
+            setInterval(() => {
+                const flower = document.createElement('div');
+                flower.classList.add('flower');
+                flower.innerHTML = '🌹';
+                flower.style.left = Math.random() * 100 + '%';
+                flower.style.fontSize = Math.random() * 30 + 20 + 'px';
+                document.body.appendChild(flower);
+            }, 300);
         });
     </script>
 </body>
